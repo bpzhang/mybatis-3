@@ -15,6 +15,8 @@
  */
 package org.apache.ibatis.submitted.typehandler;
 
+import static org.junit.Assert.*;
+
 import java.io.Reader;
 import java.sql.Connection;
 
@@ -23,6 +25,7 @@ import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+import org.apache.ibatis.submitted.typehandler.Product.ProductId;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -65,4 +68,54 @@ public class TypeHandlerTest {
     }
   }
 
+  @Test
+  public void shouldApplyTypeHandlerOnGeneratedKey() {
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+      Product product = new Product();
+      product.setName("new product");
+      mapper.insertProduct(product);
+      assertNotNull(product.getId());
+      assertNotNull(product.getId().getValue());
+    } finally {
+      sqlSession.close();
+    }
+  }
+
+  @Test
+  public void shouldApplyTypeHandlerWithJdbcTypeSpecified() throws Exception {
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+      Product product = mapper.getProductByName("iPad");
+      assertEquals(Integer.valueOf(2), product.getId().getValue());
+    } finally {
+      sqlSession.close();
+    }
+  }
+
+  @Test
+  public void shouldApplyTypeHandlerUsingConstructor() throws Exception {
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+      Product product = mapper.getProductByName("iPad");
+      assertEquals(Integer.valueOf(2), product.getId().getValue());
+    } finally {
+      sqlSession.close();
+    }
+  }
+
+  @Test
+  public void shouldApplyTypeHandlerOnReturnTypeWithJdbcTypeSpecified() throws Exception {
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    try {
+      Mapper mapper = sqlSession.getMapper(Mapper.class);
+      ProductId productId = mapper.getProductIdByName("iPad");
+      assertEquals(Integer.valueOf(2), productId.getValue());
+    } finally {
+      sqlSession.close();
+    }
+  }
 }
