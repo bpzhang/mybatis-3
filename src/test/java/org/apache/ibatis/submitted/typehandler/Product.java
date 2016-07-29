@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2016 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -91,6 +91,33 @@ public class Product {
     public ProductId getNullableResult(CallableStatement cs, int columnIndex) throws SQLException {
       ProductId id = new ProductId();
       id.setValue(cs.getInt(columnIndex));
+      return id;
+    }
+  }
+
+  public static class ConstantProductIdTypeHandler extends BaseTypeHandler<ProductId> {
+    @Override
+    public void setNonNullParameter(PreparedStatement ps, int i, ProductId parameter, JdbcType jdbcType) throws SQLException {
+    }
+
+    @Override
+    public ProductId getNullableResult(ResultSet rs, String columnName) throws SQLException {
+      return getConstantId();
+    }
+
+    @Override
+    public ProductId getNullableResult(ResultSet rs, int columnIndex) throws SQLException {
+      return getConstantId();
+    }
+
+    @Override
+    public ProductId getNullableResult(CallableStatement cs, int columnIndex) throws SQLException {
+      return getConstantId();
+    }
+
+    private ProductId getConstantId() {
+      ProductId id = new ProductId();
+      id.setValue(999);
       return id;
     }
   }
