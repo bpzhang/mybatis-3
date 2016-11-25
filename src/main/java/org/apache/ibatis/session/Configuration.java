@@ -100,13 +100,14 @@ public class Configuration {
   protected boolean safeRowBoundsEnabled = false;
   protected boolean safeResultHandlerEnabled = true;
   protected boolean mapUnderscoreToCamelCase = false;
-  protected boolean aggressiveLazyLoading = true;
+  protected boolean aggressiveLazyLoading = false;
   protected boolean multipleResultSetsEnabled = true;
   protected boolean useGeneratedKeys = false;
   protected boolean useColumnLabel = true;
   protected boolean cacheEnabled = true;
   protected boolean callSettersOnNulls = false;
   protected boolean useActualParamName = true;
+  protected boolean returnInstanceForEmptyRow = false;
 
   protected String logPrefix;
   protected Class <? extends Log> logImpl;
@@ -247,6 +248,14 @@ public class Configuration {
 
   public void setUseActualParamName(boolean useActualParamName) {
     this.useActualParamName = useActualParamName;
+  }
+
+  public boolean isReturnInstanceForEmptyRow() {
+    return returnInstanceForEmptyRow;
+  }
+
+  public void setReturnInstanceForEmptyRow(boolean returnEmptyInstance) {
+    this.returnInstanceForEmptyRow = returnEmptyInstance;
   }
 
   public String getDatabaseId() {
@@ -505,8 +514,14 @@ public class Configuration {
     getLanguageRegistry().setDefaultDriverClass(driver);
   }
 
-  public LanguageDriver getDefaultScriptingLanuageInstance() {
+  public LanguageDriver getDefaultScriptingLanguageInstance() {
     return languageRegistry.getDefaultDriver();
+  }
+
+  /** @deprecated Use {@link #getDefaultScriptingLanguageInstance()} */
+  @Deprecated
+  public LanguageDriver getDefaultScriptingLanuageInstance() {
+    return getDefaultScriptingLanguageInstance();
   }
 
   public MetaObject newMetaObject(Object object) {

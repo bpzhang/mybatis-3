@@ -128,13 +128,14 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
               <td>
                 aggressiveLazyLoading
               </td>
-              <td>활성화 상태로 두게 되면 지연로딩 프로퍼티를 가진 객체는 호출에 따라 로드될 것이다. 
-			  반면에 개별 프로퍼티는 요청할때 로드된다. </td>
+              <td>
+                When enabled, any method call will load all the lazy properties of the object. Otherwise, each property is loaded on demand (see also <code>lazyLoadTriggerMethods</code>).
+              </td>
               <td>
                 true | false
               </td>
               <td>
-                true
+                false (true in ≤3.4.1)
               </td>
             </tr>
             <tr>
@@ -367,7 +368,7 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
                 타입별칭이나 패키지 경로를 포함한 클래스명
               </td>
               <td>
-                org.apache.ibatis.scripting.xmltags.XMLDynamicLanguageDriver
+                org.apache.ibatis.scripting.xmltags.XMLLanguageDriver
               </td>
             </tr>
             <tr>
@@ -378,6 +379,22 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
                 가져온 값이 null일때 setter나 맵의 put 메소드를 호출할지를 명시
                 Map.keySet() 이나 null값을 초기화할때 유용하다. 
                 int, boolean 등과 같은 원시타입은 null을 설정할 수 없다는 점은 알아두면 좋다.  
+              </td>
+              <td>
+                true | false
+              </td>
+              <td>
+                false
+              </td>
+            </tr>
+            <tr>
+              <td>
+                returnInstanceForEmptyRow
+              </td>
+              <td>
+                MyBatis, by default, returns <code>null</code> when all the columns of a returned row are NULL.
+                When this setting is enabled, MyBatis returns an empty instance instead.
+                Note that it is also applied to nested results (i.e. collectioin and association). Since: 3.4.2
               </td>
               <td>
                 true | false

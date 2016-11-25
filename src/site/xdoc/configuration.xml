@@ -183,18 +183,13 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
                 aggressiveLazyLoading
               </td>
               <td>
-                When enabled, an object with lazy
-                loaded properties will be
-                loaded entirely upon a call to any of
-                the lazy properties.
-                Otherwise, each property is loaded on
-                demand.
+                When enabled, any method call will load all the lazy properties of the object. Otherwise, each property is loaded on demand (see also <code>lazyLoadTriggerMethods</code>).
               </td>
               <td>
                 true | false
               </td>
               <td>
-                true
+                false (true in ≤3.4.1)
               </td>
             </tr>
             <tr>
@@ -451,7 +446,7 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
                 A type alias or fully qualified class name.
               </td>
               <td>
-                org.apache.ibatis.scripting.xmltags.XMLDynamicLanguageDriver
+                org.apache.ibatis.scripting.xmltags.XMLLanguageDriver
               </td>
             </tr>
             <tr>
@@ -460,6 +455,22 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
               </td>
               <td>
                 Specifies if setters or map's put method will be called when a retrieved value is null. It is useful when you rely on Map.keySet() or null value initialization. Note primitives such as (int,boolean,etc.) will not be set to null. 
+              </td>
+              <td>
+                true | false
+              </td>
+              <td>
+                false
+              </td>
+            </tr>
+            <tr>
+              <td>
+                returnInstanceForEmptyRow
+              </td>
+              <td>
+                MyBatis, by default, returns <code>null</code> when all the columns of a returned row are NULL.
+                When this setting is enabled, MyBatis returns an empty instance instead.
+                Note that it is also applied to nested results (i.e. collectioin and association). Since: 3.4.2
               </td>
               <td>
                 true | false
@@ -1534,14 +1545,14 @@ public class ExamplePlugin implements Interceptor {
         </p>
 
         <source><![CDATA[SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment);
-SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment,properties);]]></source>
+SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, properties);]]></source>
 
         <p>If the environment is omitted, then the default environment is
           loaded, as follows:
         </p>
 
         <source><![CDATA[SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader);
-SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader,properties);]]></source>
+SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, properties);]]></source>
 
         <p>The environments element defines how the environment is
           configured.
@@ -1841,8 +1852,8 @@ public class C3P0DataSourceFactory extends UnpooledDataSourceFactory {
           MyBatis is able to execute different statements depending on your database vendor.
           The multi-db vendor support is based on the mapped statements <code>databaseId</code> attribute.
           MyBatis will load all statements with no <code>databaseId</code> attribute
-          or with a <code>databaseId</code> that matches the current one. If case the same statement
-          if found with and without the <code>databaseId</code> the latter will be discarded.
+          or with a <code>databaseId</code> that matches the current one. In case the same statement
+          is found with and without the <code>databaseId</code> the latter will be discarded.
           To enable the multi vendor support add a <code>databaseIdProvider</code>
           to mybatis-config.xml file as follows:
         </p>
@@ -1888,7 +1899,7 @@ public class C3P0DataSourceFactory extends UnpooledDataSourceFactory {
           statements. But first, we need to tell MyBatis where to find them.
           Java doesn’t really provide any good means of auto-discovery in
           this regard, so the best way to do it is to simply tell MyBatis
-          where to find the mapping files. You can use class path relative
+          where to find the mapping files. You can use classpath relative
           resource references, fully qualified url references
           (including <code>file:///</code> URLs), class names or package names. 
           For example:

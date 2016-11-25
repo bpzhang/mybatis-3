@@ -151,14 +151,14 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
                 aggressiveLazyLoading
               </td>
               <td>
-                この設定が有効の場合、Lazy loading が指定されたプロパティが要求されると、そのプロパティを内包するオブジェクト全体が読み込まれます。
-                無効の場合は、各プロパティはそれぞれ要求時に読み込まれます。
+                この設定が有効の場合、オブジェクトのいずれかのメソッド呼び出しと同時にすべての Lazy loading が実行されます。
+                無効の場合は、各プロパティはそれぞれ要求時に読み込まれます（関連項目 <code>lazyLoadTriggerMethods</code> ）。
               </td>
               <td>
                 true | false
               </td>
               <td>
-                true
+                false （3.4.1 以下は true）
               </td>
             </tr>
             <tr>
@@ -389,7 +389,7 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
                 タイプエイリアスまたは完全修飾クラス名
               </td>
               <td>
-                org.apache.ibatis.scripting.xmltags.XMLDynamicLanguageDriver
+                org.apache.ibatis.scripting.xmltags.XMLLanguageDriver
               </td>
             </tr>
             <tr>
@@ -399,6 +399,20 @@ SqlSessionFactory factory = sqlSessionFactoryBuilder.build(reader, environment, 
               <td>
                 取得した値が null の場合にセッターあるいは Map の put メソッドを呼び出すかどうかを指定します。
                 この設定は Map.keySet() や null 値による初期化を利用している場合に有用です。プリミティブ型（int, boolean, 等）に null がセットされることはありません。
+              </td>
+              <td>
+                true | false
+              </td>
+              <td>
+                false
+              </td>
+            </tr>
+            <tr>
+              <td>
+                returnInstanceForEmptyRow
+              </td>
+              <td>
+                取得した列が全て NULL だった場合、デフォルトの動作では <code>null</code> が返りますが、 returnInstanceForEmptyRow に true を設定すると空のインスタンスが返るようになります。この動作はネストされた結果をマッピングする際にも適用されます。導入されたバージョン: 3.4.2
               </td>
               <td>
                 true | false
